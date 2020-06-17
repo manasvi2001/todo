@@ -1,12 +1,21 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <app-header></app-header>
+    <app-todo-board></app-todo-board>
   </div>
 </template>
+
+<script>
+import Header from "./components/Header.vue";
+import TodoBoard from "./components/TodoBoard.vue";
+
+export default {
+  components: {
+    appHeader: Header,
+    appTodoBoard: TodoBoard
+  }
+};
+</script>
 
 <style lang="scss">
 #app {
