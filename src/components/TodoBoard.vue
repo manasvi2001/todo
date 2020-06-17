@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import Vue from "vue";
 import Board from "./TodoBoard/Board.vue";
 
 export default {
@@ -40,13 +41,23 @@ export default {
         if (el.title === board) {
           el.items.push(item);
         }
+        return el;
       });
     },
     updateTask(item, board, index) {
       this.boards = this.boards.map(el => {
         if (el.title === board) {
-          el.items[index] = item;
+          Vue.set(el.items, index, item);
         }
+        return el;
+      });
+    },
+    deleteTask(board, index) {
+      this.boards = this.boards.map(el => {
+        if (el.title === board) {
+          el.items.splice(index, 1);
+        }
+        return el;
       });
     }
   }

@@ -4,19 +4,26 @@
       {{ boardName }}
     </div>
     <div class="board__content">
-      <div
-        class="item__container"
-        @click="addTask"
-        v-if="boardName === 'to do'"
-      >
-        Add a new task
-      </div>
-      <div class="item__container" v-if="addingNewTask">
-        <input v-model="newTask" @blur="addNewTask" />
+      <div class="item__container" v-if="boardName === 'to do'">
+        <div
+          style="width: 100%; font-weight: bold; font-style: italic;"
+          @click="addTask"
+          v-if="!addingNewTask"
+        >
+          Add a new task...
+        </div>
+        <div v-if="addingNewTask">
+          <input
+            v-model="newTask"
+            ref="newtask"
+            @keyup.enter="addNewTask"
+            @blur="cancelAddTask"
+          />
+        </div>
       </div>
       <app-item
         v-for="(item, index) in items"
-        :key="index"
+        :key="item"
         :title="item"
         :index="index"
         :allowEdit="boardName !== 'done'"
@@ -42,16 +49,24 @@ export default {
     appItem: Item
   },
   methods: {
+    cancelAddTask() {
+      this.addingNewTask = false;
+    },
     addTask() {
       this.addingNewTask = true;
     },
     addNewTask() {
+      if (!this.newTask.length) {
+        return;
+      }
       this.addingNewTask = false;
       this.$parent.addTaskToBoard(this.newTask, this.boardName);
     },
     updateTask(item, index) {
-      console.log(item, index);
       this.$parent.updateTask(item, this.boardName, index);
+    },
+    deleteTask(index) {
+      this.$parent.deleteTask(this.boardName, index);
     }
   }
 };
@@ -63,7 +78,6 @@ export default {
     width: 100%;
     margin-right: 5rem;
     text-align: left;
-    // border: 1px solid red;
   }
 
   &__heading {
