@@ -23,11 +23,11 @@ export default {
         },
         {
           title: "doing",
-          items: ["Send the mail"]
+          items: ["Todo feature"]
         },
         {
           title: "done",
-          items: ["Send the mail"]
+          items: ["Add css"]
         }
       ]
     };
@@ -56,6 +56,20 @@ export default {
       this.boards = this.boards.map(el => {
         if (el.title === board) {
           el.items.splice(index, 1);
+        }
+        return el;
+      });
+    },
+    dropContent(ob) {
+      if (ob.board === ob.toBoard) {
+        return;
+      }
+      this.boards = this.boards.map(el => {
+        if (el.title === ob.toBoard) {
+          el.items.push(ob.title);
+        }
+        if (el.title === ob.board) {
+          el.items.splice(ob.index, 1);
         }
         return el;
       });

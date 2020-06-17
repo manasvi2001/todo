@@ -3,7 +3,7 @@
     class="item__container"
     :class="{ item__done: !allowEditOption }"
     draggable="true"
-    @dragover.prevent="handleDragOver($event)"
+    @dragstart="handleDragStart($event)"
   >
     <div class="item__title" v-if="!editing">
       {{ title }}
@@ -27,7 +27,7 @@ export default {
       editing: false
     };
   },
-  props: ["title", "allowEdit", "index"],
+  props: ["title", "allowEdit", "index", "board"],
   methods: {
     editTask() {
       this.editing = true;
@@ -40,8 +40,17 @@ export default {
       // Call parent method
       this.$parent.deleteTask(this.index);
     },
-    handleDragOver(e) {
+    handleDragStart(e) {
       e.dataTransfer.dropEffect = "move";
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData(
+        "draggedItem",
+        JSON.stringify({
+          title: this.title,
+          board: this.board,
+          index: this.index
+        })
+      );
     }
   }
 };
@@ -50,7 +59,7 @@ export default {
 <style lang="scss">
 .item {
   &__container {
-    margin: 2rem 0;
+    margin: 1rem 0;
     box-shadow: 2px 2px 5px lighten(#000000, 60%);
     padding: 1rem;
     border-radius: 5px;

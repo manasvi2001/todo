@@ -1,5 +1,10 @@
 <template>
-  <div class="board__container">
+  <div
+    class="board__container"
+    @drop="dropContent($event)"
+    @dragover.prevent
+    @dragenter.prevent
+  >
     <div class="board__heading">
       {{ boardName }}
     </div>
@@ -27,6 +32,7 @@
         :title="item"
         :index="index"
         :allowEdit="boardName !== 'done'"
+        :board="board"
       ></app-item>
     </div>
   </div>
@@ -67,6 +73,11 @@ export default {
     },
     deleteTask(index) {
       this.$parent.deleteTask(this.boardName, index);
+    },
+    dropContent(e) {
+      let data = e.dataTransfer.getData("draggedItem");
+      data = JSON.parse(data);
+      this.$parent.dropContent({ ...data, toBoard: this.boardName });
     }
   }
 };
